@@ -162,6 +162,8 @@ class DataInXYChart extends ApplicationFrame{
 		xylineandshaperenderer.setSeriesShapesVisible(1, true);
 		xylineandshaperenderer.setSeriesLinesVisible(2, true);
 		xylineandshaperenderer.setSeriesShapesVisible(2, false);
+		xylineandshaperenderer.setSeriesLinesVisible(3, false);
+		xylineandshaperenderer.setSeriesShapesVisible(3, true);
 		plot.setRenderer(xylineandshaperenderer)
 		return chart;
 	}
