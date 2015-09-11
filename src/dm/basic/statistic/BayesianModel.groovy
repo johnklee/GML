@@ -9,6 +9,7 @@ class BayesianModel {
 	class Classify{
 		def headers
 		def bayesProbs = [:]
+		def yProbs
 		def pySet
 		
 		public Tuple predict(String fs)
@@ -23,11 +24,12 @@ class BayesianModel {
 				feats.eachWithIndex { v, i ->
 					tp*=bayesProbs[i][v][py]					
 				}
+				tp*=yProbs[py]
 				if(tp>mxProb)
 				{
 					mxProb = tp
 					csY = py
-				}
+				}				
 				psum+=tp
 			}
 			return new Tuple(csY, mxProb/psum)
@@ -48,7 +50,9 @@ class BayesianModel {
 		//                              Count map(feature value),
 		//                              Possible value set]
 		def trainMap = [:]
+		def yProbs = [:]				/* Pr[H] map*/
 		Set pySet = new TreeSet()		/*Possible Output Y Set*/
+		CountMap yCM = new CountMap()
 		
 		printf("\t\t0) Initialize...\n")
 		headers.size().times{i->
@@ -76,6 +80,10 @@ class BayesianModel {
 				t.get(4)[p].count(r[i])
 				t.get(5).add(r[i])
 			}
+			yCM.count(p)
+		}
+		pySet.each{ yv->
+			yProbs[yv] = yCM.getCount(yv)/yCM.size()
 		}
 		
 		printf("\t\t2) Build up Bayeisan probability table...\n")
@@ -104,7 +112,7 @@ class BayesianModel {
 			}
 			bayesProbs[fi]=pt
 		}
-		return new Classify(pySet:pySet, headers:headers, bayesProbs:bayesProbs)
+		return new Classify(pySet:pySet, headers:headers, bayesProbs:bayesProbs, yProbs:yProbs)
 	}
 	
 	static void Test()
