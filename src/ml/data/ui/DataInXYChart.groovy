@@ -20,10 +20,13 @@ import flib.util.Tuple as JT
 
 class DataInXYChart extends ApplicationFrame{
 	List<JT> datas = null
-	def minX=-5
-	def maxX=5
+	static def minX=-5
+	static def maxX=5
 	def minY=-5
 	def maxY=5
+	static def YUpperRng=-1.0
+	static def YLowerRng=-1.0
+	static def AEX = true
 	
 	/**
 	 * A demonstration application showing a scatter plot.
@@ -117,10 +120,13 @@ class DataInXYChart extends ApplicationFrame{
 				maxX = Math.max((double)maxX, (double)r.get(1)[0])
 			}
 		}
-		minX-=1
-		maxX+=1
-		minY-=1
-		maxY+=1
+		if(AEX)
+		{
+			minX-=1
+			maxX+=1
+			minY-=1
+			maxY+=1
+		}		
 		if(w[2]==0)
 		{
 			s3.add(0, minY)
@@ -154,6 +160,8 @@ class DataInXYChart extends ApplicationFrame{
 		NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 		rangeAxis.setTickMarkInsideLength(2.0f);
 		rangeAxis.setTickMarkOutsideLength(0.0f);
+		if(YUpperRng!=YLowerRng)
+			rangeAxis.setRange(YLowerRng, YUpperRng)
 		
 		XYLineAndShapeRenderer xylineandshaperenderer = new XYLineAndShapeRenderer();
 		xylineandshaperenderer.setSeriesLinesVisible(0, false);
@@ -185,7 +193,7 @@ class DataInXYChart extends ApplicationFrame{
 		datas.add(new JT(1, [-2, -11]))
 		datas.add(new JT(2, [3, 10.5, 0]))
 		
-		DataInXYChart demo = new DataInXYChart("Scatter Plot Demo 1", datas);
+		DataInXYChart demo = new DataInXYChart("Linear Regression Demo", datas);
 		demo.pack();
 		RefineryUtilities.centerFrameOnScreen(demo);
 		demo.setVisible(true);
